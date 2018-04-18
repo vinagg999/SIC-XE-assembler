@@ -1,0 +1,54 @@
+Line 	 	 Loc 	 	 	Source Statement 	 	 	 Object Code 
+_____________________________________________________________________________________________
+
+
+5		0000		PALIND		START		0
+10		0000		FIRST		LDB		#1		690001
+15		0003		CLOOP		+JSUB		RDREC		4b100000
+20		0007				LDA		LENGTH		032ff6
+25		000a				COMP		#0		290000
+30		000d				JEQ		CLOOP		332ff0
+35		0010				LDT		#LENGTH		752fed
+40		0013				SUBR		B,T		9435
+45		0015				+JSUB		CMPREC		4b10000c
+50		0019		LENGTH		RESW		1
+55		 .
+60		 . SUBROUTINE READ RECORD
+65		 .
+70		001c		RDREC		CLEAR		X		B410
+75		001e				CLEAR		A		B400
+80		0020				CLEAR		S		B440
+85		0022				+LDT		#4096		75001000
+90		0026		RLOOP		TD		INPUT		e32fe2
+95		0029				JEQ		RLOOP		332fd4
+100		002c				RD		INPUT		db2fdc
+105		002f				COMPR		A,S		A004
+110		0031				JEQ		EXIT1		332fcc
+115		0034				STCH		BUFFER,X		57afc9
+120		0037				TIXR		T		B850
+125		0039				JLT		RLOOP		3b2fc4
+130		003c		EXIT1		STX		LENGTH		132fc1
+135		003f				RSUB				4F0000
+140		0042		INPUT		BYTE		X'F1'		F1
+145		 .
+150		 . SUBROUTINE COMPARE RECORD
+155		 .
+160		0043		CMPREC		CLEAR		A		B400
+165		0045				COMPR		X,T		A015
+170		0047				JEQ		EXIT2		332fc1
+175		004a				JGT		EXIT2		372fbe
+180		004d				LDA		BUFFER,X		03afb0
+185		0050				LDS		BUFFER,X		6fafad
+190		0053				SUBR		B,T		9435
+195		0055				ADDR		B,X		9031
+200		0057				COMPR		A,S		A004
+205		0059				JEQ		CMPREC		332fb0
+210		005c				JLT		ERROR		3b2fa1
+215		005f				JGT		ERROR		372f9e
+220		0062		EXIT2		LDA		#1		010001
+225		0065				STA		RESULT		0f2f98
+230		0068		ERROR		RSUB				4F0000
+235		006b		RESULT		RESW		1
+240		006e		BUFFER		RESB		4096
+245						END		FIRST
+_____________________________________________________________________________________________
